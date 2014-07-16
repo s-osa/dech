@@ -1,6 +1,6 @@
 # Dech
 
-TODO: Write a gem description
+![travis](https://travis-ci.org/e-maido/dech.svg?branch=master)
 
 ## Installation
 
