@@ -1,5 +1,6 @@
-require "bundler/setup"
-require "dech"
+project_root = File.join(File.dirname(__FILE__), '..')
+$: << project_root
 
-RSpec.configure do |config|
-end
+Dir[File.join(File.dirname(__FILE__), "support", "*")].each {|f| require f }
+
+require 'lib/dech'
