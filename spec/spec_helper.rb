@@ -1,3 +1,5 @@
+# coding: utf-8
+
 project_root = File.join(File.dirname(__FILE__), '..')
 $: << project_root
 
