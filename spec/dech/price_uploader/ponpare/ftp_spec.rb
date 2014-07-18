@@ -3,7 +3,7 @@ require "spec_helper"
 describe Dech::PriceUploader::Ponpare::FTP do
   let(:dech) {
     Dech::PriceUploader::Ponpare::FTP.new(
-      products: {},
+      products: [{id: "PRODUCT-CODE", price: 9800}],
       username: "username",
       password: "password",
       host:     "example.com"
@@ -46,6 +46,35 @@ describe Dech::PriceUploader::Ponpare::FTP do
 
       it "should be true" do
         expect(dech.ready?).to be true
+      end
+    end
+  end
+
+  describe "#csv" do
+    headers = {
+      "コントロールカラム"    => /\Au\Z/,
+      "商品管理ID（商品URL）" => String,
+      "販売価格"              => /\d+/
+    }
+
+    describe "headers" do
+      let(:csv){ CSV.new(dech.csv, headers: true) }
+
+      headers.each_key do |header|
+        it "should have '#{header}' header" do
+          csv.readlines
+          expect(csv.headers).to be_include(header)
+        end
+      end
+    end
+
+    describe "columns" do
+      let(:csv){ CSV.new(dech.csv, headers: true).read }
+
+      headers.each do |header, type|
+        it "should have #{type} in '#{header}'" do
+          expect(csv[header]).to be_all{|c| type === c }
+        end
       end
     end
   end
