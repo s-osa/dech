@@ -31,6 +31,13 @@ module Dech
 
           StringIO.new(csv_string)
         end
+
+        def save_csv_as(filename)
+          FileUtils.mkdir_p(File.dirname(filename))
+          File.open(filename, "w:windows-31j") do |file|
+            file << csv.string
+          end
+        end
       end
     end
   end
