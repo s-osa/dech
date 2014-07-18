@@ -95,4 +95,31 @@ describe Dech::PriceUploader::Ponpare::FTP do
       end
     end
   end
+
+  describe "#upload" do
+    context "server is ready" do
+      before do
+        ftp = double("ftp")
+        allow(ftp).to receive(:list).and_return([])
+        expect(ftp).to receive(:storlines)
+        allow(Net::FTP).to receive(:open).and_yield(ftp)
+      end
+
+      it "should upload CSV file to the path on FTP server" do
+        expect(dech.upload).to be true
+      end
+    end
+
+    context "server is not ready" do
+      before do
+        ftp = double("ftp")
+        allow(ftp).to receive(:list).with(dech.path).and_return([dech.path])
+        allow(Net::FTP).to receive(:open).and_yield(ftp)
+      end
+
+      it "should not upload CSV file to the path on FTP server" do
+        expect(dech.upload).to be false
+      end
+    end
+  end
 end

@@ -18,7 +18,7 @@ module Dech
         end
 
         def ready?
-          Net::FTP.open(@host, @username, @password){|ftp| ftp.list(path).empty? }
+          ftp_connection{|ftp| ftp.list(path).empty? }
         end
 
         def csv
@@ -36,6 +36,22 @@ module Dech
           FileUtils.mkdir_p(File.dirname(filename))
           File.open(filename, "w:windows-31j") do |file|
             file << csv.string
+          end
+        end
+
+        def upload!
+          !ftp_connection{|ftp| ftp.storlines("STOR #{@path}", csv) }
+        end
+
+        def upload
+          ready? && upload!
+        end
+
+        private
+
+        def ftp_connection(&block)
+          Net::FTP.open(@host, @username, @password) do |ftp|
+            yield(ftp)
           end
         end
       end
