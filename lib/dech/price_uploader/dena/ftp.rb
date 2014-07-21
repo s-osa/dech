@@ -7,7 +7,7 @@ module Dech
   module PriceUploader
     module Dena
       class FTP
-        HEADERS = %w(Code exhibittype KtaiPrice)
+        HEADERS = %w(Code exhibittype Price KtaiPrice)
 
         attr_accessor :username, :host, :path
 
@@ -20,14 +20,14 @@ module Dech
         end
 
         def ready?
-          ftp_connection{|ftp| !ftp.nlst(File.dirname(@path)).include?(@path) }
+          true
         end
 
         def csv
           Dech::CSVIO.generate do |csv|
             csv << HEADERS
             @products.each do |product|
-              csv << [product[:id].to_s.downcase, "MX", product[:price]]
+              csv << [product[:id], "MX", product[:price], product[:price]]
             end
           end
         end
@@ -39,11 +39,19 @@ module Dech
           end
         end
 
+        def upload!
+          ftp_connection{|ftp| ftp.storlines("STOR #{@path}", csv) }
+          true
+        end
+
+        def upload
+          ready? && upload!
+        end
+
         private
 
         def ftp_connection(&block)
           ftp = Net::FTP.new
-          ftp.passive = true
           ftp.connect(@host)
           ftp.login(@username, @password)
 

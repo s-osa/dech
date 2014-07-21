@@ -36,26 +36,8 @@ describe Dech::PriceUploader::Dena::FTP do
   end
 
   describe "#ready?" do
-    context "some files in the server" do
-      before do
-        expect(ftp).to receive(:nlst).and_return([dech.path])
-        expect(Net::FTP).to receive(:new).and_return(ftp)
-      end
-
-      it "should be false" do
-        expect(dech.ready?).to be false
-      end
-    end
-
-    context "any files in the server" do
-      before do
-        expect(ftp).to receive(:nlst).and_return([])
-        expect(Net::FTP).to receive(:new).and_return(ftp)
-      end
-
-      it "should be true" do
-        expect(dech.ready?).to be true
-      end
+    it "should be false" do
+      expect(dech.ready?).to be true
     end
   end
 
@@ -109,6 +91,20 @@ describe Dech::PriceUploader::Dena::FTP do
       CSV.open(filename, "r:windows-31j:utf-8", headers: true) do |csv|
         expect{csv.readlines}.not_to raise_error
         expect(csv.headers).to eq(Dech::PriceUploader::Dena::FTP::HEADERS)
+      end
+    end
+  end
+
+  describe "#upload" do
+    context "server is ready" do
+      before do
+        allow(ftp).to receive(:nlst).and_return([])
+        expect(ftp).to receive(:storlines)
+        expect(Net::FTP).to receive(:new).and_return(ftp).at_least(:once)
+      end
+
+      it "should upload CSV file to the path on FTP server" do
+        expect(dech.upload).to be true
       end
     end
   end
