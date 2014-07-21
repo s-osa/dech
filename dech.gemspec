@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Utilities gem for e-commerce mall in Japan.}
   spec.description   = %q{Dech enables you to upload price change easily.}
   spec.homepage      = "https://github.com/e-maido/dech"
-  spec.license       = ""
+  spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
