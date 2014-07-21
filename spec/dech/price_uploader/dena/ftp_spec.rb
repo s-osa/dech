@@ -95,4 +95,21 @@ describe Dech::PriceUploader::Dena::FTP do
       end
     end
   end
+
+  describe "#save_csv_as" do
+    let(:filename){ "tmp/#{Time.now.strftime("%Y%m%d_%H%M%S_%N")}.csv" }
+
+    it "should save CSV file as given name" do
+      dech.save_csv_as(filename)
+      expect(Dir.glob("tmp/*")).to be_include(filename)
+    end
+
+    it "should save CSV file in Shift_JIS" do
+      dech.save_csv_as(filename)
+      CSV.open(filename, "r:windows-31j:utf-8", headers: true) do |csv|
+        expect{csv.readlines}.not_to raise_error
+        expect(csv.headers).to eq(Dech::PriceUploader::Dena::FTP::HEADERS)
+      end
+    end
+  end
 end

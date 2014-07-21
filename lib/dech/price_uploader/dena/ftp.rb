@@ -32,6 +32,13 @@ module Dech
           end
         end
 
+        def save_csv_as(filename)
+          FileUtils.mkdir_p(File.dirname(filename))
+          File.open(filename, "w:windows-31j") do |file|
+            file << csv.string
+          end
+        end
+
         private
 
         def ftp_connection(&block)
