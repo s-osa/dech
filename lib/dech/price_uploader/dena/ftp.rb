@@ -1,13 +1,13 @@
 # coding: utf-8
 
-require "dech/csvio"
-require "double_bag_ftps"
+require 'dech/csvio'
+require 'net/ftp'
 
 module Dech
   module PriceUploader
-    module Ponpare
-      class FTPS
-        HEADERS = %w(コントロールカラム 商品管理ID（商品URL） 販売価格)
+    module Dena
+      class FTP
+        HEADERS = %w(Code exhibittype Price KtaiPrice)
 
         attr_accessor :username, :host, :path
 
@@ -15,19 +15,19 @@ module Dech
           @products = args[:products] || []
           @username = args[:username]
           @password = args[:password]
-          @host     = args[:host] || "ftps.ponparemall.com"
-          @path     = args[:path] || "/item.csv"
+          @host     = args[:host] || "bcmaster1.dena.ne.jp"
+          @path     = args[:path] || "/data.csv"
         end
 
         def ready?
-          ftps_connection{|ftps| !ftps.nlst(File.dirname(@path)).include?(@path) }
+          true
         end
 
         def csv
           Dech::CSVIO.generate do |csv|
             csv << HEADERS
             @products.each do |product|
-              csv << ["u", product[:id].to_s.downcase, product[:price]]
+              csv << [product[:id], "MX", product[:price], product[:price]]
             end
           end
         end
@@ -40,7 +40,7 @@ module Dech
         end
 
         def upload!
-          ftps_connection{|ftps| ftps.storlines("STOR #{@path}", csv) }
+          ftp_connection{|ftp| ftp.storlines("STOR #{@path}", csv) }
           true
         end
 
@@ -50,16 +50,14 @@ module Dech
 
         private
 
-        def ftps_connection(&block)
-          ftps = DoubleBagFTPS.new
-          ftps.passive = true
-          ftps.ssl_context = DoubleBagFTPS.create_ssl_context(verify_mode: OpenSSL::SSL::VERIFY_NONE)
-          ftps.connect(@host)
-          ftps.login(@username, @password)
+        def ftp_connection(&block)
+          ftp = Net::FTP.new
+          ftp.connect(@host)
+          ftp.login(@username, @password)
 
-          yield(ftps)
+          yield(ftp)
         ensure
-          ftps.close
+          ftp.close
         end
       end
     end
