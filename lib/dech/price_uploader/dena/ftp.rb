@@ -16,6 +16,23 @@ module Dech
           @host     = args[:host] || "bcmaster1.dena.ne.jp"
           @path     = args[:path] || "/data.csv"
         end
+
+        def ready?
+          ftp_connection{|ftp| !ftp.nlst(File.dirname(@path)).include?(@path) }
+        end
+
+        private
+
+        def ftp_connection(&block)
+          ftp = Net::FTP.new
+          ftp.passive = true
+          ftp.connect(@host)
+          ftp.login(@username, @password)
+
+          yield(ftp)
+        ensure
+          ftp.close
+        end
       end
     end
   end

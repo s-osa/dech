@@ -12,6 +12,15 @@ describe Dech::PriceUploader::Dena::FTP do
     )
   }
 
+  let(:ftp) {
+    ftp = double("ftp")
+    allow(ftp).to receive(:passive=)
+    allow(ftp).to receive(:connect)
+    allow(ftp).to receive(:login)
+    allow(ftp).to receive(:close)
+    ftp
+  }
+
   describe "initialize" do
     context "given no args" do
       it "should create an instance successfully" do
@@ -25,4 +34,29 @@ describe Dech::PriceUploader::Dena::FTP do
       end
     end
   end
+
+  describe "#ready?" do
+    context "some files in the server" do
+      before do
+        expect(ftp).to receive(:nlst).and_return([dech.path])
+        expect(Net::FTP).to receive(:new).and_return(ftp)
+      end
+
+      it "should be false" do
+        expect(dech.ready?).to be false
+      end
+    end
+
+    context "any files in the server" do
+      before do
+        expect(ftp).to receive(:nlst).and_return([])
+        expect(Net::FTP).to receive(:new).and_return(ftp)
+      end
+
+      it "should be true" do
+        expect(dech.ready?).to be true
+      end
+    end
+  end
+
 end
