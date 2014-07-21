@@ -7,6 +7,8 @@ module Dech
   module PriceUploader
     module Dena
       class FTP
+        HEADERS = %w(Code exhibittype KtaiPrice)
+
         attr_accessor :username, :host, :path
 
         def initialize(args={})
@@ -19,6 +21,17 @@ module Dech
 
         def ready?
           ftp_connection{|ftp| !ftp.nlst(File.dirname(@path)).include?(@path) }
+        end
+
+        def csv
+          csv_string = CSV.generate do |csv|
+            csv << HEADERS
+            @products.each do |product|
+              csv << [product[:id].to_s.downcase, "MX", product[:price]]
+            end
+          end
+
+          StringIO.new(csv_string.encode(Encoding::Windows_31J))
         end
 
         private

@@ -59,4 +59,40 @@ describe Dech::PriceUploader::Dena::FTP do
     end
   end
 
+  describe "#csv" do
+    headers = {
+      "Code"        => String,
+      "exhibittype" => /\AMX\Z/,
+      "KtaiPrice"   => /\d+/
+    }
+
+    describe "headers" do
+      let(:csv){ CSV.new(dech.csv, headers: true) }
+
+      headers.each_key.map{|h| h.encode(Encoding::Windows_31J) }.each do |header|
+        it "should have '#{header}' header" do
+          csv.readlines
+          expect(csv.headers).to be_include(header)
+        end
+      end
+    end
+
+    describe "columns" do
+      let(:csv){ CSV.new(dech.csv, headers: true).read }
+
+      headers.each do |header, type|
+        it "should have #{type} in '#{header}'" do
+          expect(csv[header.encode(Encoding::Windows_31J)]).to be_all{|c| type === c }
+        end
+      end
+    end
+
+    describe "encoding" do
+      let(:io){ dech.csv }
+
+      it "should have windows-31j as external_encoding" do
+        expect(io.external_encoding).to eq(Encoding::Windows_31J)
+      end
+    end
+  end
 end
