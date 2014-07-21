@@ -1,7 +1,7 @@
 # coding: utf-8
 
+require "dech/csvio"
 require "double_bag_ftps"
-require "csv"
 
 module Dech
   module PriceUploader
@@ -24,14 +24,12 @@ module Dech
         end
 
         def csv
-          csv_string = CSV.generate do |csv|
+          Dech::CSVIO.generate do |csv|
             csv << HEADERS
             @products.each do |product|
               csv << ["u", product[:id].to_s.downcase, product[:price]]
             end
           end
-
-          StringIO.new(csv_string.encode(Encoding::Windows_31J))
         end
 
         def save_csv_as(filename)
