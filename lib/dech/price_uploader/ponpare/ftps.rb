@@ -1,6 +1,5 @@
 # coding: utf-8
 
-require "net/ftp"
 require "double_bag_ftps"
 require "csv"
 
