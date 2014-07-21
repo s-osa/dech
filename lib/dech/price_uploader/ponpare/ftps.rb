@@ -1,12 +1,13 @@
 # coding: utf-8
 
 require "net/ftp"
+require "double_bag_ftps"
 require "csv"
 
 module Dech
   module PriceUploader
     module Ponpare
-      class FTP
+      class FTPS
         HEADERS = %w(コントロールカラム 商品管理ID（商品URL） 販売価格)
 
         attr_accessor :username, :host, :path
@@ -20,18 +21,18 @@ module Dech
         end
 
         def ready?
-          ftp_connection{|ftp| ftp.list(path).empty? }
+          ftps_connection{|ftps| !ftps.nlst(File.dirname(@path)).include?(@path) }
         end
 
         def csv
-          csv_string = CSV.generate("") do |csv|
+          csv_string = CSV.generate do |csv|
             csv << HEADERS
             @products.each do |product|
-              csv << ["u", product[:id], product[:price]]
+              csv << ["u", product[:id].to_s.downcase, product[:price]]
             end
           end
 
-          StringIO.new(csv_string)
+          StringIO.new(csv_string.encode(Encoding::Windows_31J))
         end
 
         def save_csv_as(filename)
@@ -42,7 +43,8 @@ module Dech
         end
 
         def upload!
-          !ftp_connection{|ftp| ftp.storlines("STOR #{@path}", csv) }
+          ftps_connection{|ftps| ftps.storlines("STOR #{@path}", csv) }
+          true
         end
 
         def upload
@@ -51,10 +53,16 @@ module Dech
 
         private
 
-        def ftp_connection(&block)
-          Net::FTP.open(@host, @username, @password) do |ftp|
-            yield(ftp)
-          end
+        def ftps_connection(&block)
+          ftps = DoubleBagFTPS.new
+          ftps.passive = true
+          ftps.ssl_context = DoubleBagFTPS.create_ssl_context(verify_mode: OpenSSL::SSL::VERIFY_NONE)
+          ftps.connect(@host)
+          ftps.login(@username, @password)
+
+          yield(ftps)
+        ensure
+          ftps.close
         end
       end
     end
