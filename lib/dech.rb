@@ -1,6 +1,5 @@
 # coding: utf-8
 
-require "dech/csv"
 require "dech/hash_key_mapper"
 require "dech/version"
 
