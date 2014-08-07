@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["OSA Shunsuke"]
   spec.email         = ["hhelibebcnofnenamg@gmail.com"]
   spec.summary       = %q{Utilities gem for e-commerce mall in Japan.}
-  spec.description   = %q{Dech enables you to upload price change easily.}
+  spec.description   = %q{Dech enables to upload product information easily.}
   spec.homepage      = "https://github.com/e-maido/dech"
   spec.license       = "MIT"
 
