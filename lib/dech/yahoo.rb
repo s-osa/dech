@@ -1,5 +1,5 @@
 # coding: utf-8
-require 'dech/yahoo/csv'
+require 'dech/yahoo/ftp'
 
 module Dech
   class Yahoo
