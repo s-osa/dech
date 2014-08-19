@@ -7,6 +7,10 @@ module Dech
   class CSV < StringIO
     DEFAULT_ENCODING = Encoding::Windows_31J
 
+    HEADER_MAPPINGS  = {}
+    REQUIRED_HEADERS = []
+    STATIC_COLUMNS   = {}
+
     def initialize(array, args={})
       @array = array
       @option = {}

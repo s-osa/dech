@@ -1,11 +1,10 @@
 # coding: utf-8
-
 require "spec_helper"
 
-describe Dech::Rakuten::FTP do
+describe Dech::Yahoo::FTP do
   let(:ftp) {
     described_class.new(
-      products: [{id: "PRODUCT-CODE", price: 9800}],
+      products: [{id: "PRODUCT-CODE", price: 9800, "path" => "a:b", "name" => "productA"}],
       username: "username",
       password: "password",
       host:     "example.com"
@@ -29,7 +28,7 @@ describe Dech::Rakuten::FTP do
 
   describe "#csv" do
     subject { ftp.csv }
-    it { is_expected.to be_an_instance_of(Dech::Rakuten::CSV) }
+    it { is_expected.to be_an_instance_of(Dech::Yahoo::CSV) }
   end
 
   describe "#ready?" do
