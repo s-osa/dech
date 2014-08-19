@@ -12,8 +12,6 @@ describe Dech::Rakuten::CSV do
     it { is_expected.to be_an_instance_of(Dech::Rakuten::CSV) }
     it { is_expected.to be_a(Dech::CSV) }
     it { is_expected.to be_a(StringIO) }
-
-    p Dech::Rakuten::CSV.new(products).to_a
   end
 
   describe "#valid?" do
