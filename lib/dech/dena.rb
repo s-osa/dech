@@ -1,5 +1,5 @@
 # coding: utf-8
-require 'dech/dena/csv'
+require 'dech/dena/ftp'
 
 module Dech
   class Dena
