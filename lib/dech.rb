@@ -8,9 +8,5 @@ require "dech/ponpare"
 require "dech/rakuten"
 require "dech/yahoo"
 
-# deprecated classes
-require "dech/price_uploader"
-require "dech/csvio"
-
 module Dech
 end
