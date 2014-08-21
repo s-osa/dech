@@ -1,5 +1,5 @@
 # coding: utf-8
-require "dech/ponpare/csv"
+require "dech/ponpare/ftps"
 
 module Dech
   class Ponpare
