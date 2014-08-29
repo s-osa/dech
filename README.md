@@ -1,7 +1,7 @@
 # Dech
 
 [![Gem Version](https://badge.fury.io/rb/dech.svg)](http://badge.fury.io/rb/dech)
-![travis](https://travis-ci.org/e-maido/dech.svg?branch=master)
+[![Build Status](https://travis-ci.org/e-maido/dech.svg?branch=master)](https://travis-ci.org/e-maido/dech)
 [![Coverage Status](https://coveralls.io/repos/e-maido/dech/badge.png?branch=master)](https://coveralls.io/r/e-maido/dech?branch=master)
 
 ## Installation
