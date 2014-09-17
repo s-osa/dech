@@ -1,4 +1,5 @@
 require "spec_helper"
+require "webmock/rspec"
 
 describe Dech::Rakuten::API do
   let(:api) {
@@ -23,5 +24,28 @@ describe Dech::Rakuten::API do
   describe "#ready?" do
     subject {api.ready?}
     it { is_expected.to be_truthy }
+  end
+
+  describe "#upload!" do
+    let!(:stub){stub_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update")}
+
+    it "should raise Error" do
+      expect{api.upload!}.to raise_error
+    end
+
+    it "should access API" do
+      api.upload! rescue true
+      expect(stub).to have_been_made
+    end
+  end
+
+  describe "#upload" do
+    before do
+      stub_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update")
+      api.upload
+    end
+
+    subject {a_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update")}
+    it("should access API") {is_expected.to have_been_made}
   end
 end

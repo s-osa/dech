@@ -25,7 +25,7 @@ module Dech
       def upload!
         formatted_products.each do |product|
           item = @client.update(product)
-          raise "#{item.item_url} #{item.errors[0].msg}" unless item.success?
+          raise "#{item.errors}" unless item.success?
         end
       end
 
