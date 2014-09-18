@@ -15,37 +15,37 @@ describe Dech::Rakuten::API do
     it { is_expected.to be_a Dech::Rakuten::API}
   end
 
-  describe "#formatted_products" do
-    it 'should return formatted parameters' do
-      expect(api.send(:formatted_products)).to eq [{'item_url'=> 'PRODUCT-CODE', 'item_price'=> 9800, 'item_name' => 'PRODUCT-NAME'}]
-    end
+  describe "#formatted_products (private)" do
+    let(:formatted_products){ [{'item_url'=> 'PRODUCT-CODE', 'item_price'=> 9800, 'item_name' => 'PRODUCT-NAME'}] }
+    subject{ api.send(:formatted_products) }
+    it{ is_expected.to eq(formatted_products)}
   end
 
   describe "#ready?" do
     subject {api.ready?}
-    it { is_expected.to be_truthy }
+    it { is_expected.to be true }
   end
 
   describe "#upload!" do
-    let!(:stub){stub_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update")}
+    let!(:request){stub_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update")}
 
-    it "should raise Error" do
-      expect{api.upload!}.to raise_error
+    it "should access to API" do
+      api.upload! rescue true
+      expect(request).to have_been_made
     end
 
-    it "should access API" do
-      api.upload! rescue true
-      expect(stub).to have_been_made
+    context 'access failer' do
+      it "should raise Error" do
+        expect{api.upload!}.to raise_error
+      end
     end
   end
 
   describe "#upload" do
-    before do
-      stub_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update")
+    let!(:request){stub_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update")}
+    it 'should access to API' do
       api.upload
+      expect(request).to have_been_made
     end
-
-    subject {a_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update")}
-    it("should access API") {is_expected.to have_been_made}
   end
 end
