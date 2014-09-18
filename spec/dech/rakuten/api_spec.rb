@@ -35,8 +35,8 @@ describe Dech::Rakuten::API do
     end
 
     context 'access failer' do
-      it "should raise Error" do
-        expect{api.upload!}.to raise_error
+      it "should raise RakuteUploadError" do
+        expect{api.upload!}.to raise_error ::RakutenUploadError
       end
     end
   end

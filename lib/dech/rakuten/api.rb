@@ -1,5 +1,7 @@
 require 'rms_web_service'
 
+class RakutenUploadError < StandardError; end
+
 module Dech
   class Rakuten
     class API
@@ -25,7 +27,7 @@ module Dech
       def upload!
         formatted_products.each do |product|
           item = @client.update(product)
-          raise "#{item.errors}" unless item.success?
+          raise RakutenUploadError, "#{item.errors}" unless item.success?
         end
       end
 
