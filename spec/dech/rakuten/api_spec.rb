@@ -9,6 +9,7 @@ describe Dech::Rakuten::API do
       license_key: "license_key"
     )
   }
+  let(:response) {"<itemUpdateResult><code>N000</code></itemUpdateResult>"}
 
   describe "initialize" do
     subject {api}
@@ -34,7 +35,17 @@ describe Dech::Rakuten::API do
       expect(request).to have_been_made
     end
 
-    context 'access failer' do
+    context 'API access is success' do
+      before do
+        stub_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update").to_return(:body => response)
+      end
+
+      it "" do
+        expect(api.upload!).to be true
+      end
+    end
+
+    context 'API access is failure' do
       it "should raise RakuteUploadError" do
         expect{api.upload!}.to raise_error ::RakutenUploadError
       end
@@ -46,6 +57,22 @@ describe Dech::Rakuten::API do
     it 'should access to API' do
       api.upload
       expect(request).to have_been_made
+    end
+
+    context 'API access is success' do
+      before do
+        stub_request(:post, "https://api.rms.rakuten.co.jp/es/1.0/item/update").to_return(:body => response)
+      end
+
+      it "" do
+        expect(api.upload).to be true
+      end
+    end
+
+    context 'API access is failure' do
+      it "" do
+        expect(api.upload).to be false
+      end
     end
   end
 end

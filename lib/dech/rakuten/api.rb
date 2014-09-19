@@ -21,7 +21,6 @@ module Dech
 
       def upload
         upload! rescue false
-        true
       end
 
       def upload!
@@ -29,6 +28,7 @@ module Dech
           item = @client.update(product)
           raise RakutenUploadError, "#{item.errors}" unless item.success?
         end
+        true
       end
 
       def ready?
