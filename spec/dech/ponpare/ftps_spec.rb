@@ -14,7 +14,7 @@ describe Dech::Ponpare::FTPS do
 
   let(:ftps) {
     ftps = double("ftps")
-    allow(ftps).to receive(:passive=)
+    expect(ftps).to receive(:passive=).with(true)
     allow(ftps).to receive(:ssl_context=)
     allow(ftps).to receive(:connect)
     allow(ftps).to receive(:login)
