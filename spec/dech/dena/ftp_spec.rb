@@ -13,7 +13,6 @@ describe Dech::Dena::FTP do
 
   let(:net_ftp) {
     net_ftp = double("net_ftp")
-    expect(net_ftp).to receive(:passive=).with(true)
     allow(net_ftp).to receive(:connect)
     allow(net_ftp).to receive(:login)
     allow(net_ftp).to receive(:close)

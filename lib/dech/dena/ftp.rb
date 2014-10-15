@@ -38,10 +38,7 @@ module Dech
       private
 
       def ftp_connection
-         Net::FTP.open(@host, @username, @password) do |ftp|
-           ftp.passive = true
-           yield(ftp)
-         end
+         Net::FTP.open(@host, @username, @password){|ftp| yield(ftp) }
       end
     end
   end

@@ -16,7 +16,7 @@ describe Dech::CSV do
           it { is_expected.to be(Encoding::Windows_31J) }
         end
 
-        context :given, Encoding::UTF_8 do
+        context :given, Encoding::UTF_8.to_s do
           subject{ Dech::CSV.new([], encoding: Encoding::UTF_8).external_encoding }
           it { is_expected.to be(Encoding::UTF_8) }
         end
@@ -25,12 +25,12 @@ describe Dech::CSV do
       describe "headers" do
         array = [[:col1, :col2, :col3], [1, 2, 3]]
 
-        context "default with", array.first do
+        context "default with", array.first.to_s do
           subject{ Dech::CSV.new(array).headers }
           it { is_expected.to eq(array.first) }
         end
 
-        context "given false with", array.first do
+        context "given false with", array.first.to_s do
           subject{ Dech::CSV.new(array, headers: false).headers }
           it { is_expected.to eq(nil) }
         end
@@ -44,7 +44,7 @@ describe Dech::CSV do
 
     it { is_expected.to be_an_instance_of(Array) }
 
-    context :given, array do
+    context :given, array.to_s do
         it { is_expected.to eq(array) }
     end
   end
@@ -55,7 +55,7 @@ describe Dech::CSV do
 
     it { is_expected.to be_an_instance_of(String) }
 
-    context :given, array do
+    context :given, array.to_s do
       array.each do |row|
         row.each do |cell|
           it { is_expected.to include(cell.to_s) }
