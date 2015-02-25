@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'net/ftp'
+require 'net/ftp/port_command'
 require 'dech/dena/csv'
 
 module Dech
@@ -16,6 +17,8 @@ module Dech
         @password = args[:password]
         @host     = args[:host] || DEFAULT_HOST
         @path     = args[:path] || DEFAULT_PATH
+        @local_address = args[:local_address]
+        @local_port    = args[:local_port]
       end
 
       def csv
@@ -38,7 +41,10 @@ module Dech
       private
 
       def ftp_connection
-         Net::FTP.open(@host, @username, @password){|ftp| yield(ftp) }
+         Net::FTP.open(@host, @username, @password) do |ftp|
+           ftp.port(@local_address, @local_port) if @local_address || @local_port
+           yield(ftp)
+         end
       end
     end
   end
